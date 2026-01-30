@@ -13,14 +13,12 @@ public:
         float y_prev = 0.0f;
         float alpha = 0.1f; // 미리 계산된 계수 저장
 
-        // 노브가 돌아갔을 때만 호출하여 alpha 업데이트
         void update_coeff(float cutoff, double sample_rate) {
             double rc = 1.0 / (2.0 * std::numbers::pi * cutoff);
             double dt = 1.0 / sample_rate;
             alpha = static_cast<float>(dt / (rc + dt));
         }
 
-        // 실제 루프 안에서는 최전방 사칙연산만 수행
         inline void process(float& sample) {
             float y = alpha * sample + (1.0f - alpha) * y_prev;
             y_prev = y;
@@ -31,7 +29,7 @@ public:
     float* ports[6];
     double sample_rate;
     LowPassFilter tone_filter;
-    float last_tone = -1.0f; // 이전 톤 값을 저장해 변경 감지
+    float last_tone = -1.0f; 
 
     static inline float fast_tanh(float x) {
         if (x <= -3.0f) return -1.0f;
@@ -60,7 +58,6 @@ public:
         const float  dry_lvl  = *self->ports[DRY_LVL];
         const float  wet_lvl  = *self->ports[WET_LVL];
 
-        // [최적화] Tone 값이 변경되었을 때만 필터 계수 재계산
         if (tone != self->last_tone) {
             self->tone_filter.update_coeff(tone, self->sample_rate);
             self->last_tone = tone;
@@ -72,7 +69,7 @@ public:
             // 1. Waveshaping
             float wet_sample = fast_tanh(in_sample * drive);
 
-            // 2. Low Pass Filter (최적화된 가벼운 함수)
+            // 2. Low Pass Filter 
             self->tone_filter.process(wet_sample);
 
             // 3. Mixing
