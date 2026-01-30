@@ -1,5 +1,5 @@
 ## ShapingFuzzForBass 
-A warm and powerful waveshaping fuzz LV2 plugin for bass guitar. <br> 
+Warm and powerful waveshaping fuzz LV2 plugin for bass guitar. <br> 
 Unlike traditional hard-clipping fuzzes, it utilizes a soft-clipping technique based on a high-speed `tanh` approximation. <br>
 No GUI.<br>
 Tested Environment: Arch Linux / Ardour.<br>
